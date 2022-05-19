@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URLConnection;
 
 /**
  * 这个类表示游戏过程中的整个游戏界面，是一切的载体
@@ -23,6 +24,7 @@ public class ChessGameFrame extends JFrame {
     public static Chessboard chessboard;
     //my design
     JLabel statusLabel;
+   // public ImagePanel imagePanel=new ImagePanel("./images/background.png");
     //ImageIcon background;
 //    MusicPlayer music=new MusicPlayer("./music.wav");
 //
@@ -39,17 +41,23 @@ public class ChessGameFrame extends JFrame {
         setSize(WIDTH, HEIGTH);
         setLocationRelativeTo(null); // Center the window.
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //设置程序关闭按键，如果点击右上方的叉就游戏全部关闭了
-        //my design
 
-        setLayout(null);
 
-        addBackground();
-        addLabel();//先创建label，然后在Chessboard 里面赋值
-        addChessboard();
-        //addLabel();
+//        //my design
+//        setLayout(null);
+//        imagePanel.setLayout(null);
+//        imagePanel.setBounds(0,0,getWidth(),getHeight());
+//        this.add(imagePanel);
+//        imagePanel.setVisible(true);
+
+
         addRestartButton();
         addLoadButton();
         addSaveButton();
+        addChessboard();
+        addLabel();//先创建label，然后在Chessboard 里面赋值
+        addBackground();
+        //addLabel();
 
 
     }
@@ -125,7 +133,25 @@ public class ChessGameFrame extends JFrame {
         button.addActionListener(e -> {
             System.out.println("Click load");
             String path = JOptionPane.showInputDialog(this, "Input Path here");
-            gameController.loadGameFromFile(path);
+            boolean testPath=true;
+            if (path.length()>4){
+              if (path.charAt(path.length()-1)!='t'){testPath=false;}
+              if (path.charAt(path.length()-2)!='x'){testPath=false;}
+              if (path.charAt(path.length()-3)!='t'){testPath=false;}
+              if (path.charAt(path.length()-4)!='.'){testPath=false;}
+            }else {testPath=false;}
+            if (!testPath){
+                //????弹出这个消息之后，就会将原有的游戏界面缩小，怎么办
+//                JFrame out=new JFrame();
+//                setVisible(true);
+//                setResizable(true);
+//                setLocation(getWidth()/3,getHeight()/3);
+//                setSize(getWidth()/5,getHeight()/5);
+//                setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                JOptionPane.showMessageDialog(this,"your load get something wrong");
+            }else if (!gameController.checkLoadGame(path)){
+                JOptionPane.showMessageDialog(this,"your load get something wrong");
+            } else {gameController.loadGameFromFile(path);}
         });
     }
 
@@ -165,18 +191,20 @@ public class ChessGameFrame extends JFrame {
 ////把背景图片添加到分层窗格的最底层作为背景
 //        this. getLayeredPane () . add(label);
 
-//        ImageIcon background = new ImageIcon("./images/background.png");
-//        //将背景图进行压缩，一般如果你想显示一整张图片，就得把大小设置跟窗口一样
-//        Image image = background.getImage();
-//        Image smallImage = image.getScaledInstance(getWidth(), getHeight(), Image.SCALE_FAST);
-//        ImageIcon backgrounds = new ImageIcon(smallImage);
-//
-//        //将图片添加到JLabel标签
-//        JLabel jlabel = new JLabel(backgrounds);
-//        //设置标签的大小
-//        jlabel.setBounds(0,0, getWidth(),getHeight() );
-//        //将图片添加到窗口
-//        add(jlabel);
+        ImageIcon background = new ImageIcon("./images/background.png");
+        //将背景图进行压缩，一般如果你想显示一整张图片，就得把大小设置跟窗口一样
+        Image image = background.getImage();
+        Image smallImage = image.getScaledInstance(getWidth(), getHeight(), Image.SCALE_FAST);
+        ImageIcon backgrounds = new ImageIcon(smallImage);
+
+        //将图片添加到JLabel标签
+        JLabel jlabel = new JLabel(backgrounds);
+        //设置标签的大小
+        jlabel.setBounds(0,0, getWidth(),getHeight() );
+        //将图片添加到窗口
+        JPanel imagePanel=(JPanel) this.getContentPane();
+        imagePanel.setOpaque(false);
+        add(jlabel);
 
     }
 
