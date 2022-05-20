@@ -80,6 +80,7 @@ public class Chessboard extends JComponent {
 
 
     //w,write
+    //棋盘上有很多棋子，当棋盘做repaint操作的时候，
     public void initialGame(){
         initiateEmptyChessboard();
         initRookOnBoard(0, 0, ChessColor.BLACK);
@@ -124,7 +125,7 @@ public class Chessboard extends JComponent {
         return currentColor;
     }
 
-    //w替换棋子
+    //w棋子添加到棋盘的操作
     public void putChessOnBoard(ChessComponent chessComponent) {
         int row = chessComponent.getChessboardPoint().getX(), col = chessComponent.getChessboardPoint().getY();
 
@@ -150,6 +151,7 @@ public class Chessboard extends JComponent {
         int row2 = chess2.getChessboardPoint().getX(), col2 = chess2.getChessboardPoint().getY();
         chessComponents[row2][col2] = chess2;
 
+        //在图片展示的时候，执行了交换操作
         chess1.repaint();
         chess2.repaint();
     }
@@ -179,6 +181,8 @@ public class Chessboard extends JComponent {
     }
 
 
+
+    //绘制每个棋盘
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -215,6 +219,33 @@ public class Chessboard extends JComponent {
         repaint();
 
         chessData.forEach(System.out::println);
+    }
+    public boolean checkLoadGame(List<String>chessData){
+        boolean currentP=true;
+
+        boolean chess=true;
+        if(chessData.size()!=9){
+            return false;
+        }else{
+            if (chessData.get(8).charAt(0)!='w'&&chessData.get(8).charAt(0)!='b'){currentP=false;}
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (chessData.get(i).charAt(j)!='K'&&chessData.get(i).charAt(j)!='Q'
+                            &&chessData.get(i).charAt(j)!='B'&&chessData.get(i).charAt(j)!='P'
+                            &&chessData.get(i).charAt(j)!='N'&&chessData.get(i).charAt(j)!='R'
+                            &&chessData.get(i).charAt(j)!='k'&&chessData.get(i).charAt(j)!='q'
+                            &&chessData.get(i).charAt(j)!='b'&&chessData.get(i).charAt(j)!='p'
+                            &&chessData.get(i).charAt(j)!='n'&&chessData.get(i).charAt(j)!='r'
+                            &&chessData.get(i).charAt(j)!='_'){
+                        chess=false;
+                        break;
+                    }
+                }
+
+            }
+        }
+        if (chess&&currentP){return  false;
+        }else {return true;}
     }
     public String saveGame(){
         StringBuilder out=new StringBuilder();
@@ -258,7 +289,7 @@ public class Chessboard extends JComponent {
         }
         if(currentColor==ChessColor.WHITE){out.append('w');}else {out.append('b');}
         return out.toString();
-    }
+    }//
 
     //add queen
     private void initQueenOnBoard(int row, int col, ChessColor color) {//add queen

@@ -49,4 +49,15 @@ public class GameController {
         }
 
     }
+    //
+
+    public boolean checkLoadGame(String path){
+        try {
+            List<String> chessData = Files.readAllLines(Path.of(path));
+            return chessboard.checkLoadGame(chessData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

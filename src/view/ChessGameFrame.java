@@ -58,7 +58,7 @@ public class ChessGameFrame extends JFrame {
         addLabel();//先创建label，然后在Chessboard 里面赋值
         addBackground();
         //addLabel();
-
+//
 
     }
 
